@@ -30,6 +30,21 @@ for(let row=0; row<rows; row++){
   }
 }
 
+addEventListener("keydown", (event) => {
+    if(event.key == "ArrowUp"){
+      direction = 'up'
+    }
+    if(event.key == "ArrowDown"){
+      direction = 'down'
+    }
+    if(event.key == "ArrowLeft"){
+      direction = 'left'
+    }
+    if(event.key == "ArrowRight"){
+      direction = 'right'
+    }
+});
+
 function render() {
   snake.forEach(segment => {
     blocks[`${segment.x}-${segment.y}`].classList.add("fill");
@@ -67,7 +82,5 @@ setInterval(() => {
 },400);
 
 
-document.addEventListener("keydown", (event) => {
-    console.log(event.key);
-});
+
 
