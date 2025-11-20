@@ -12,8 +12,9 @@ html, body {
 :root {
   /* Background Color */
   --bg-primary-color: #0a0a0a;
-  --fill-color: #eabcb9;
-  
+  --bg-fill-color: #ede3e2;
+  --bg-food-color: #ef5e4b;
+
   /* Text Color */
   --text-primary-color: #f3f3f3;
 
@@ -83,5 +84,9 @@ section .infos {
 }
 
 .fill {
-  background-color: var(--fill-color);
+  background-color: var(--bg-fill-color);
+}
+
+.food {
+  background-color: var(--bg-food-color);
 }

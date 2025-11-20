@@ -2,6 +2,9 @@ const board = document.querySelector('.board');
 const boardHeight = 40;
 const boardWidth = 40;
 
+const rows = Math.floor(board.clientHeight / boardHeight);
+const cols = Math.floor(board.clientWidth / boardWidth);
+
 const blocks = [];
 const snake =[{
   x : 2 , y : 4
@@ -10,10 +13,10 @@ const snake =[{
 }, {
   x : 2 , y : 6
 }];
+let food = {x : Math.floor(Math.random()*rows) , y : Math.floor(Math.random()*cols)}
 let direction = 'down';
+let intervalId = null;
 
-const rows = Math.floor(board.clientHeight / boardHeight);
-const cols = Math.floor(board.clientWidth / boardWidth);
 
 // for(let i=0; i< rows*cols; i++){
 //   const block = document.createElement('div');
@@ -30,6 +33,7 @@ for(let row=0; row<rows; row++){
   }
 }
 
+//Controlling Directions.
 addEventListener("keydown", (event) => {
     if(event.key == "ArrowUp"){
       direction = 'up'
@@ -46,13 +50,9 @@ addEventListener("keydown", (event) => {
 });
 
 function render() {
-  snake.forEach(segment => {
-    blocks[`${segment.x}-${segment.y}`].classList.add("fill");
-  })
-}
+   let head = null;
 
-setInterval(() => {
-  let head = null;
+  blocks[`${food.x}-${food.y}`].classList.add("food");
 
   //left direction
   if(direction === 'left'){
@@ -71,12 +71,32 @@ setInterval(() => {
     head = {x : snake[0].x - 1 , y : snake[0].y};
   }
 
+  if(head.x < 0 || head.x >= rows || head.y < 0 || head.y >= cols){
+    alert("Game Over");
+    clearInterval(intervalId);
+  }
+
+  //Checking, when snake eats the food --
+  if(head.x == food.x && head.y == food.y){
+    blocks[`${food.x}-${food.y}`].classList.remove("food");
+    food = {x : Math.floor(Math.random()*rows) , y : Math.floor(Math.random()*cols)}
+    blocks[`${food.x}-${food.y}`].classList.add("food");
+    snake.unshift(head);
+  }
+
   snake.forEach(segment => {
     blocks[`${segment.x}-${segment.y}`].classList.remove("fill");
   })
 
   snake.unshift(head);
   snake.pop();
+
+  snake.forEach(segment => {
+    blocks[`${segment.x}-${segment.y}`].classList.add("fill");
+  })
+}
+
+intervalId = setInterval(() => {
 
   render();
 },400);
