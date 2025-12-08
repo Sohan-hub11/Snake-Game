@@ -11,6 +11,14 @@ const startGameModal = document.querySelector(".start-game");
 const gameOverModal = document.querySelector(".game-over");
 const restartButton = document.querySelector(".btn-over");
 
+const highScoreElement = document.querySelector(".high-score");
+const scoreElement = document.querySelector(".score");
+const timeElement = document.querySelector(".time");
+
+let highScore = 0;
+let score = 0;
+let time = `00-00`;
+
 const blocks = [];
 let snake =[{
   x : 2 , y : 4
@@ -78,6 +86,7 @@ function render() {
     head = {x : snake[0].x - 1 , y : snake[0].y};
   }
 
+  //Wall Collision Condition
   if(head.x < 0 || head.x >= rows || head.y < 0 || head.y >= cols){
     clearInterval(intervalId);
 
@@ -94,6 +103,14 @@ function render() {
     food = {x : Math.floor(Math.random()*rows) , y : Math.floor(Math.random()*cols)}
     blocks[`${food.x}-${food.y}`].classList.add("food");
     snake.unshift(head);
+
+    score += 10;
+    scoreElement.innerHTML = score;
+
+    if(score > highScore){
+      highScore = score;
+      localStorage.setItem("highScore", highScore.toString());
+    }
   }
 
   snake.forEach(segment => {
@@ -125,6 +142,9 @@ restartButton.addEventListener("click",restart);
 function restart() {
   modal.style.display = "none";
 
+  score = 0;
+  time = `00-00`;
+  
   snake.forEach(segment => {
     blocks[`${segment.x}-${segment.y}`].classList.remove("fill");
   })
