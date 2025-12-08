@@ -15,9 +15,11 @@ const highScoreElement = document.querySelector(".high-score");
 const scoreElement = document.querySelector(".score");
 const timeElement = document.querySelector(".time");
 
-let highScore = 0;
+let highScore = localStorage.getItem("highScore") || 0;
 let score = 0;
 let time = `00-00`;
+
+highScoreElement.innerHTML = highScore;
 
 const blocks = [];
 let snake =[{
@@ -30,6 +32,7 @@ let snake =[{
 let food = {x : Math.floor(Math.random()*rows) , y : Math.floor(Math.random()*cols)}
 let direction = 'down';
 let intervalId = null;
+let timerIntervalId = null;
 
 
 // for(let i=0; i< rows*cols; i++){
@@ -38,7 +41,7 @@ let intervalId = null;
 //   board.appendChild(block);
 // }
 
-//Craeting Grid interface(Blocks).
+//Creating Grid interface(Blocks).
 for(let row=0; row<rows; row++){
   for(let col=0; col<cols; col++){
     const block = document.createElement('div');
@@ -135,6 +138,19 @@ startButton.addEventListener("click", () => {
   intervalId = setInterval(() => {
     render();
   },300);
+
+  timerIntervalId = setInterval(() => {
+    let [min, sec] = time.split("-").map(Number);
+    if(sec == 59) {
+      min += 1;
+      sec = 0;
+    }
+    else {
+      sec ++;
+    }
+    time = `${min}-${sec}`;
+    timeElement.innerHTML = time;
+  },1000)
 });
 
 restartButton.addEventListener("click",restart);
@@ -144,7 +160,10 @@ function restart() {
 
   score = 0;
   time = `00-00`;
-  
+  scoreElement.innerHTML = score;
+  timeElement.innerHTML = time;
+  highScoreElement.innerHTML = highScore;
+
   snake.forEach(segment => {
     blocks[`${segment.x}-${segment.y}`].classList.remove("fill");
   })
